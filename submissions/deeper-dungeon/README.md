@@ -30,7 +30,7 @@ maximum prize              25 RF
 
 Those price the bank-or-descend decision alone. The shipped game also drops a curio worth **0.4458 RF** in one empty room in five, paid for out of the same edge, so the pot layer **as actually played returns 0.9435 RF at a 5.65% edge**. The drop rate is the dial, and `check:games` fails if it is ever tuned far enough to give the layer away — dropping from *every* empty room hands the player an 8.12% edge over the house.
 
-Tiers 1–5 clear break-even growth `(1 − empty) / loot` by a hair, so descending is correct but only just — that razor edge is the game. Past tier 5 growth is held below break-even, so deep rooms pay spectacularly without ever being the right call: reaching room 6 on the optimal line takes five empty rooms in a row, 0.0076% of runs. The 25 RF Dragon Hoard is a lure, not a plan. [Full tables and the solver's reasoning](https://github.com/wasutz/deeper-dungeon/blob/aea7743/README.md#the-loop).
+Tiers 1–5 clear break-even growth `(1 − empty) / loot` by a hair, so descending is correct but only just — that razor edge is the game. Past tier 5 growth is held below break-even, so deep rooms pay spectacularly without ever being the right call: reaching room 6 on the optimal line takes five empty rooms in a row, 0.0076% of runs. The 25 RF Dragon Hoard is a lure, not a plan. [Full tables and the solver's reasoning](https://github.com/wasutz/deeper-dungeon/blob/c325715/README.md#the-loop).
 
 **What would be on-chain?**
 Nothing in this build; no transaction adapter, deployment flow, on-chain action or Solidity is implemented. **The honest answer is that push-your-luck is not fully expressible on SDK v0.1.2, and that is the thing to look at first.** The SDK's chance primitive settles one fixed reward per consumable, chosen by its own weighted draw, and credited rewards cannot be clawed back — so a payout that depends on the player's *stop depth* has no action to carry it. Rather than fake it, the prototype runs both halves and labels them in-game (a **Why?** link on every run-over screen):
@@ -53,10 +53,10 @@ A curio never touches the draw; it overrides what a roll *resolves to* (a Ward p
 Two things check it. `scripts/verify.mjs` re-derives a whole run from the nonce while importing nothing from `game/` — digest from `node:crypto`, boundaries read straight out of `game.json` — so agreement is evidence rather than a tautology, and it exits non-zero printing no rooms at all if the commitment disagrees. The in-game **Fair play** panel then tallies every natural room draw against the published weights and reports Pearson's chi-square on two degrees of freedom, so a table that lied about itself would drift away from its own numbers and a player could watch it fail. Both limits are stated in the panel: neither catches a dishonest operator, because in a browser-drawn preview there isn't one — that only becomes a trust guarantee against a contract.
 
 **Source code**
-[GitHub repository](https://github.com/wasutz/deeper-dungeon/tree/aea7743) · FriendSDK v0.1.2, installed from its [published release archive](https://github.com/spokesz/friendsdk/releases/tag/v0.1.2) with the SHA-512 pinned in `package-lock.json`. Nothing in the SDK is patched.
+[GitHub repository](https://github.com/wasutz/deeper-dungeon/tree/c325715) · FriendSDK v0.1.2, installed from its [published release archive](https://github.com/spokesz/friendsdk/releases/tag/v0.1.2) with the SHA-512 pinned in `package-lock.json`. Nothing in the SDK is patched.
 
 **Playable demo / how to run**
-**<https://deeper-dungeon.vercel.app>** — the built game, deployed from `main` at `aea7743`.
+**<https://deeper-dungeon.vercel.app>** — the built game, deployed from `main` at `c325715`.
 
 It needs a browser wallet holding a hardwired Generations NFT (generation 1 or higher) on Robinhood mainnet (chain 4663): the SDK verifies ownership before play, and a wallet without an eligible Friend is told so rather than let in. Nothing is funded and nothing is signed — no RF leaves your wallet and no transaction is submitted. Session state is in memory only, so a reload starts fresh.
 
@@ -65,7 +65,7 @@ To run it locally with Node.js 22+ and the same wallet:
 ```sh
 git clone https://github.com/wasutz/deeper-dungeon.git
 cd deeper-dungeon
-git checkout aea7743
+git checkout c325715
 npm ci
 npm run dev
 ```
@@ -73,7 +73,7 @@ npm run dev
 Open **http://localhost:4173**, choose **Connect wallet**, pick your Friend. For a phone over your LAN: `npx friendsdk dev ./game --host 0.0.0.0 --port 4173`.
 
 **How do you play?**
-On the ledge, move with WASD / arrow keys or tap a destination; tap the **Torch Vendor** or **Dungeon Entrance** sign from anywhere and the Friend walks over and opens the menu on arrival, or press <kbd>E</kbd> once you are there. Buy a torch, optionally spend banked pot on up to 2 slots of curios, then take the staircase — it consumes the torch and commits the run. In the dungeon: <kbd>B</kbd> or **Bank**, <kbd>D</kbd> / <kbd>Space</kbd> or **Descend**, tap a curio to spend it, <kbd>R</kbd> / <kbd>Enter</kbd> to run again. Sound is on by default; mute, reduced motion, the odds table and the session log live in the **Menu** chip, which belongs to the ledge — a descent makes the ledge inert, so those are reachable between runs rather than during one. Reduced motion is picked up from the OS and resolves rooms instantly.
+On the ledge, move with WASD / arrow keys or tap a destination; tap the **Torch Vendor** or **Dungeon Entrance** sign from anywhere and the Friend walks over and opens the menu on arrival, or press <kbd>E</kbd> once you are there. Buy a torch, optionally spend banked pot on up to 2 slots of curios, then take the staircase — it consumes the torch and commits the run. In the dungeon: <kbd>B</kbd> or **Bank**, <kbd>D</kbd> / <kbd>Space</kbd> or **Descend**, tap a curio to spend it, <kbd>R</kbd> / <kbd>Enter</kbd> to run again. Sound is on by default; mute, reduced motion, the odds table and the session log live in the **Menu** chip, which belongs to the ledge — a descent makes the ledge inert, so those are reachable between runs rather than during one. Reduced motion is seeded from the OS preference and then follows the toggle in both directions: on, rooms resolve instantly and nothing animates; off, the reveal plays even for a player whose OS asks for stillness, because they asked for it here.
 
 **Costs and rewards**
 Everything is simulated and labelled as such in-game. One **Torch** = **1 RF**, one run. Room weights by depth and the pot at each loot tier:
@@ -110,10 +110,10 @@ Seven curios, bought with banked pot or found in 20% of empty rooms, two slots p
 Overlaps are published rather than tuned away: Divining Rod + Lucky Charm is superadditive by 21% and the strongest legal loadout at 3.00× baseline; Escape Rope + Lantern is 15% *sub*additive, because a rope caps what a trap costs so foreknowledge of one is worth less. The Greed Idol takes both slots precisely because pairing it with protection priced at more than double the sum of its parts.
 
 **What have you tested?**
-All of the following pass on `aea7743` from a clean tree:
+All of the following pass on `c325715` from a clean tree:
 
 - `npm run typecheck`
-- `npm test` — 21 tests: SHA-256 against `node:crypto`, 40 000 committed draws held to a chi-square bound, room boundaries, curio effects, the tagged reroll and drop draws, carry-slot rules, and the independent verifier held to the shipped resolver
+- `npm test` — 22 tests: SHA-256 against `node:crypto`, 40 000 committed draws held to a chi-square bound, room boundaries, curio effects, the tagged reroll and drop draws held to the tags the Verify panel prints them under, carry-slot rules, and the independent verifier held to the shipped resolver
 - `npm run check:games` — definition, weights, roll boundaries, the economy and the solved item prices
 - `npm run build` — the static bundle the preview is deployed from; the live `runtime.js` is byte-identical to this build
 - `npm run check:browser` — end-to-end at **1100 px and 360 px** against the real runner with the SDK's mocked wallet, identity and canonical sprite fixture: connect, select, keyboard and touch movement, walk-over interaction, vendor purchase, a committed descent, bank and bust, the `paused` lock, one-tap restart, verification, the satchel, the curio shelf and loadout picker, a room overridden by a Divining Rod, session calibration, mute and reduced motion, and that nothing escapes the container or covers a control
@@ -128,4 +128,4 @@ Played by hand with a real wallet and an owned Generations Friend.
 - No live token spending, trading, wearable NFTs or creator fees. Live mode has never run against a deployed contract.
 
 **Credits**
-No third-party artwork, audio or fonts are bundled. The cavern ledge uses the SDK's own isometric world renderer and prop set with geometry authored in `world.ts`; the dungeon rooms are inline SVG generated in `descent.tsx`, seeded from each room's committed draw; the curio icons are hand-authored one-bit 16 × 16 masks painted by the SDK's own `ItemArt`. Friend sprites come from the SDK's pinned canonical artwork deployment, and sound is the SDK's ten-cue kit. Typefaces are the platform monospace stack; nothing is downloaded at runtime. [Full notices](https://github.com/wasutz/deeper-dungeon/blob/aea7743/NOTICE.md).
+No third-party artwork, audio or fonts are bundled. The cavern ledge uses the SDK's own isometric world renderer and prop set with geometry authored in `world.ts`; the dungeon rooms are inline SVG generated in `descent.tsx`, seeded from each room's committed draw; the curio icons are hand-authored one-bit 16 × 16 masks painted by the SDK's own `ItemArt`. Friend sprites come from the SDK's pinned canonical artwork deployment, and sound is the SDK's ten-cue kit. Typefaces are the platform monospace stack; nothing is downloaded at runtime. [Full notices](https://github.com/wasutz/deeper-dungeon/blob/c325715/NOTICE.md).
