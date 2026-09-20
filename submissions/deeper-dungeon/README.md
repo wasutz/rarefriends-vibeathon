@@ -1,7 +1,7 @@
-# Deeper
+# Deeper Dungeon
 
 **Project name**
-Deeper
+Deeper Dungeon
 
 **Builder / contact**
 [@wasutz](https://github.com/wasutz)
